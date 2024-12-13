@@ -1,6 +1,9 @@
 import React from "react";
+import { auth } from "@/auth";
 
-const Page = () => {
+const Page = async () => {
+  const session = await auth();
+  console.log(session);
   return (
     <div>
       <h1 className="flex gap-4 text-3xl font-black text-black  ">
