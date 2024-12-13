@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 import { ModeToggle } from "./Theme";
+import MobileNavigation from "@/components/navigation/navbar/MobileNavigation";
 
 const Navbar = () => {
   return (
@@ -23,7 +24,10 @@ const Navbar = () => {
 
       <p>Global Search</p>
 
-      <ModeToggle />
+      <div className="flex-between gap-5">
+        <ModeToggle />
+        <MobileNavigation />
+      </div>
     </nav>
   );
 };
