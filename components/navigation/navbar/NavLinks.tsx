@@ -1,13 +1,11 @@
 "use client";
-
 import React from "react";
-
-import NAV_LINKS from "@/constants/NavLinks";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui/sheet";
+import NAV_LINKS  from "@/constants/NavLinks";
 
 const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const pathname = usePathname();
@@ -60,7 +58,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               key={item.label}
               className={cn(
                 isActive
-                  ? "primary-gradient rounded-lg text-light-900"
+                  ? "primary-gradient rounded-lg text-light-900 max-lg:w-fit"
                   : "text-dark300_light900",
                 "flex items-center justify-start gap-4 bg-transparent p-4",
               )}
@@ -68,8 +66,8 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               <Image
                 src={item.imgURL}
                 alt={item.label}
-                width={20}
-                height={20}
+                width={24}
+                height={24}
                 className={cn({ "invert-colors": !isActive })}
               />
               <p
