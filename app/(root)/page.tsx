@@ -6,6 +6,7 @@ import React from 'react'
 import LocalSearch from '@/components/search/LocalSearch'
 import HomeFilter from '@/components/filters/HomeFilter'
 import { auth } from '@/auth'
+import QuestionCard from '@/components/cards/QuestionCard'
 
 const questions = [
   {
@@ -21,12 +22,13 @@ const questions = [
     }],
     author: {
       _id: '1',
-      name: 'John Doe'
+      name: 'John Doe',
+      imgUrl: 'https://randomuser.me/api/portraits/women/24.jpg'
     },
     upvotes: 10,
     answers: 5,
     views: 20,
-    createdAt: '2021-09-01T00:00:00.000Z'
+    createdAt: Date.now()
   },
   {
     _id: '2',
@@ -41,7 +43,8 @@ const questions = [
     }],
     author: {
       _id: '2',
-      name: 'Jane Doe'
+      name: 'Jane Doe',
+      imgUrl: 'https://randomuser.me/api/portraits/men/32.jpg'
     },
     upvotes: 15,
     answers: 7,
@@ -83,7 +86,7 @@ const page = async ({ searchParams }: SearchParams ) => {
 
       <div className='mt-10 flex w-full flex-col gap-6'>
        {filteredQuestions.map((question) => (
-        <h1 key={question._id}>{question.title}</h1>
+        <QuestionCard key={question._id} question={question} />
        ))}
       </div>
     </>

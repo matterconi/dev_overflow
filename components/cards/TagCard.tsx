@@ -8,7 +8,7 @@ import { getDeviconClassNames } from '@/lib/utils'
 interface TagProps {
   _id: string
   name: string
-  questions: number
+  questions?: number
   showCount?: boolean
   compact?: boolean
 }
