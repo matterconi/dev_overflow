@@ -4,8 +4,8 @@ import Link from 'next/link'
 import React from 'react'
 
 import LocalSearch from '@/components/search/LocalSearch'
+import HomeFilter from '@/components/filters/HomeFilter'
 import { auth } from '@/auth'
-import { SearchParams } from 'next/dist/server/request/search-params'
 
 const questions = [
   {
@@ -55,10 +55,12 @@ interface SearchParams {
 }
 
 const page = async ({ searchParams }: SearchParams ) => {
-  const { query = ""} = await searchParams;
+  const { query = "", filter = ""} = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {
-    return question.title.toLowerCase().includes(query.toLowerCase());
+    const matchesQuery = question.title.toLowerCase().includes(query.toLowerCase());
+    const matchesFilter = filter ? question.tags.some(tag => tag.name.toLowerCase().includes(filter.toLowerCase())) : false;
+    return matchesQuery && matchesFilter;
   });
 
   return (
@@ -77,7 +79,7 @@ const page = async ({ searchParams }: SearchParams ) => {
         <LocalSearch route="/" imgSrc="/icons/search.svg" placeholder="Search questions..." otherClasses="flex-1"/>
       </section>
 
-      HomeFilter
+      <HomeFilter />
 
       <div className='mt-10 flex w-full flex-col gap-6'>
        {filteredQuestions.map((question) => (
