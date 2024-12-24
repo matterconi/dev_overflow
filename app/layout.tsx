@@ -1,3 +1,5 @@
+import React from "react";
+
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk as SpaceGrotesk } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
