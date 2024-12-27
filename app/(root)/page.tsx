@@ -5,8 +5,9 @@ import React from 'react'
 
 import LocalSearch from '@/components/search/LocalSearch'
 import HomeFilter from '@/components/filters/HomeFilter'
-import { auth } from '@/auth'
 import QuestionCard from '@/components/cards/QuestionCard'
+import { ValidationError } from '@/lib/http-errors'
+import handleError from '@/lib/handlers/error'
 
 const questions = [
   {
@@ -25,10 +26,10 @@ const questions = [
       name: 'John Doe',
       imgUrl: 'https://randomuser.me/api/portraits/women/24.jpg'
     },
+    createdAt: new Date(),
     upvotes: 10,
     answers: 5,
     views: 20,
-    createdAt: Date.now()
   },
   {
     _id: '2',
@@ -46,23 +47,34 @@ const questions = [
       name: 'Jane Doe',
       imgUrl: 'https://randomuser.me/api/portraits/men/32.jpg'
     },
+    createdAt: new Date('2021-09-02T00:00:00.000Z'),
     upvotes: 15,
     answers: 7,
-    views: 25,
-    createdAt: '2021-09-02T00:00:00.000Z'
-  }
+    views: 25,  }
 ]
+
+const test = async () => {
+  try {
+    throw new ValidationError({
+      title: ["Required"],
+      tags: ['"JavaScript" is not a valid tag.'],
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+};
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>
 }
 
 const page = async ({ searchParams }: SearchParams ) => {
+  await test();
   const { query = "", filter = ""} = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title.toLowerCase().includes(query.toLowerCase());
-    const matchesFilter = filter ? question.tags.some(tag => tag.name.toLowerCase().includes(filter.toLowerCase())) : false;
+    const matchesFilter = filter ? question.tags.some(tag => tag.name.toLowerCase().includes(filter.toLowerCase())) : true;
     return matchesQuery && matchesFilter;
   });
 

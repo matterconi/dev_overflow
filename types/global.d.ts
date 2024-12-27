@@ -6,18 +6,17 @@ interface Tag {
   interface Author {
     _id: string;
     name: string;
-    image: string;
+    imgUrl: string;
   }
 
 interface Question {
     _id: string;
     title: string;
+    description: string;
     tags: Tag[];
     author: Author;
-    cretedAt: Date;
+    createdAt: Date;
     upvotes: number;
     answers: number;
     views: number;
-    createdAt: Date;
-    
 }

@@ -12,7 +12,7 @@ interface TagProps {
   questions?: number
   showCount?: boolean
   compact?: boolean
-  remove: boolean
+  remove?: boolean
   isButton?: boolean
   handleRemove?: () => void
 }
