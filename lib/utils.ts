@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const techMap: { [key: string]: string } = {
@@ -205,32 +205,34 @@ export const techMap: { [key: string]: string } = {
 };
 
 export const getDeviconClassNames = (iconName: string) => {
-  const normalizedIconName = iconName.replace(/[ .]/g, '').toLowerCase()
-  return techMap[normalizedIconName] ? `${techMap[normalizedIconName]} colored` : 'devicon-devicon-plain'
-}
+  const normalizedIconName = iconName.replace(/[ .]/g, "").toLowerCase();
+  return techMap[normalizedIconName]
+    ? `${techMap[normalizedIconName]} colored`
+    : "devicon-devicon-plain";
+};
 
 export const getTimeStamp = (date: Date) => {
-  const currentDate = new Date()
-  const createdAt = new Date(date)
-  const diff = currentDate.getTime() - createdAt.getTime()
-  const diffInSeconds = Math.floor(diff / 1000)
-  const diffInMinutes = Math.floor(diffInSeconds / 60)
-  const diffInHours = Math.floor(diffInMinutes / 60)
-  const diffInDays = Math.floor(diffInHours / 24)
-  const diffInMonths = Math.floor(diffInDays / 30)
-  const diffInYears = Math.floor(diffInMonths / 12)
+  const currentDate = new Date();
+  const createdAt = new Date(date);
+  const diff = currentDate.getTime() - createdAt.getTime();
+  const diffInSeconds = Math.floor(diff / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+  const diffInMonths = Math.floor(diffInDays / 30);
+  const diffInYears = Math.floor(diffInMonths / 12);
 
   if (diffInSeconds < 60) {
-    return `${diffInSeconds} seconds ago`
+    return `${diffInSeconds} seconds ago`;
   } else if (diffInMinutes < 60) {
-    return `${diffInMinutes} minutes ago`
+    return `${diffInMinutes} minutes ago`;
   } else if (diffInHours < 24) {
-    return `${diffInHours} hours ago`
+    return `${diffInHours} hours ago`;
   } else if (diffInDays < 30) {
-    return `${diffInDays} days ago`
+    return `${diffInDays} days ago`;
   } else if (diffInMonths < 12) {
-    return `${diffInMonths} months ago`
+    return `${diffInMonths} months ago`;
   } else {
-    return `${diffInYears} years ago`
+    return `${diffInYears} years ago`;
   }
-}
+};

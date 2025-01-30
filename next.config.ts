@@ -8,9 +8,9 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
         port: "",
-      }
-    ]
-  }
+      },
+    ],
+  },
 };
 
 export default nextConfig;

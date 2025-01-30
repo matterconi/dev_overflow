@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import Navbar from "@/components/navigation/navbar";
 
+import Navbar from "@/components/navigation/navbar";
 import LeftSidebar from "@/components/navigation/sidebar/LeftSidebar";
 import RightSidebar from "@/components/navigation/sidebar/RightSidebar";
 

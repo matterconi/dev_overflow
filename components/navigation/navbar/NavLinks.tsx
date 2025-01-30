@@ -1,12 +1,13 @@
 "use client";
-import React from "react";
-import { usePathname } from "next/navigation";
 
-import Link from "next/link";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+
 import { SheetClose } from "@/components/ui/sheet";
-import NAV_LINKS  from "@/constants/NavLinks";
+import NAV_LINKS from "@/constants/NavLinks";
+import { cn } from "@/lib/utils";
 
 const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"
                   : "text-dark300_light900",
-                "flex items-center justify-start gap-4 bg-transparent p-4",
+                "flex items-center justify-start gap-4 bg-transparent p-4"
               )}
             >
               <Image
@@ -45,7 +46,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               <p
                 className={cn(
                   isActive ? "base-bold" : "base-medium",
-                  !isMobileNav && "max-lg:hidden",
+                  !isMobileNav && "max-lg:hidden"
                 )}
               >
                 {item.label}
@@ -61,7 +62,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
                 isActive
                   ? "primary-gradient rounded-lg text-light-900 max-lg:w-fit"
                   : "text-dark300_light900",
-                "flex items-center justify-start gap-4 bg-transparent p-4",
+                "flex items-center justify-start gap-4 bg-transparent p-4"
               )}
             >
               <Image
@@ -74,7 +75,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               <p
                 className={cn(
                   isActive ? "base-bold" : "base-medium",
-                  !isMobileNav && "max-lg:hidden",
+                  !isMobileNav && "max-lg:hidden"
                 )}
               >
                 {item.label}

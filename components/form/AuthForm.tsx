@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import React from "react";
 import { DefaultValues, FieldValues, Path, useForm } from "react-hook-form";
 import { ZodObject } from "zod";
-
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import ROUTES from "@/constants/routes";
 
 interface AuthFormProps<T extends FieldValues> {
@@ -82,7 +81,7 @@ export default function AuthForm<T extends FieldValues>({
         </Button>
         {formType === "SIGN_IN" ? (
           <p>
-            You don't have an account?{" "}
+            You don&apos;t have an account?{" "}
             <Link href={ROUTES.SIGN_UP}>
               <span className="paragraph-semibold text-primary-500 cursor-pointer">
                 Sign Up

@@ -1,13 +1,12 @@
-'use client'
+"use client";
 
-import React from 'react'
-
-import { useCurrentEditor } from '@tiptap/react'
+import { useCurrentEditor } from "@tiptap/react";
+import React from "react";
 
 const EditorJSONPreview = () => {
-  const { editor } = useCurrentEditor()
+  const { editor } = useCurrentEditor();
 
-  return <pre>{JSON.stringify(editor.getJSON(), null, 2)}</pre>
-}
+  return <pre>{JSON.stringify(editor.getJSON(), null, 2)}</pre>;
+};
 
-export default EditorJSONPreview
+export default EditorJSONPreview;

@@ -1,12 +1,10 @@
-import React from "react";
+import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk as SpaceGrotesk } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import React from "react";
 import { ReactNode } from "react";
-
-
-import "./globals.css";
 
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";

@@ -1,19 +1,18 @@
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
+import NavLinks from "@/components/navigation/navbar/NavLinks";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetTrigger,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-
-import Image from "next/image";
-import Link from "next/link";
 import ROUTES from "@/constants/routes";
-import { Button } from "@/components/ui/button";
-import NavLinks from "@/components/navigation/navbar/NavLinks";
 
 const MobileNavigation = () => {
   return (
