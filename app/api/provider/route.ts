@@ -4,12 +4,14 @@ import Account from "@/database/account.model";
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 import { ValidationError } from "@/lib/http-errors";
+import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
 import { APIErrorResponse } from "@/types/global";
 
 export async function POST(request: Request) {
   const { providerAccountId } = await request.json();
   try {
+    await dbConnect();
     const validatedData = UserSchema.partial().safeParse({ providerAccountId });
 
     if (!validatedData.success) {
