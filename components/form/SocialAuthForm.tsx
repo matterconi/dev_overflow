@@ -16,7 +16,6 @@ const SocialAuthForm = () => {
     try {
       await signIn(provider, {
         callbackUrl: ROUTES.HOME,
-        redirect: false,
       });
     } catch (error) {
       console.error(error);
@@ -34,7 +33,11 @@ const SocialAuthForm = () => {
 
   return (
     <div className="mt-10 flex flex-wrap gap-2.5">
-      <Button className={buttonClass} onClick={() => handleSignIn("github")}>
+      <Button
+        type="button"
+        className={buttonClass}
+        onClick={() => handleSignIn("github")}
+      >
         <Image
           src="/icons/github.svg"
           alt="github logo"
@@ -44,7 +47,11 @@ const SocialAuthForm = () => {
         />
         <span>Log in with Github</span>
       </Button>
-      <Button className={buttonClass} onClick={() => handleSignIn("google")}>
+      <Button
+        type="button"
+        className={buttonClass}
+        onClick={() => handleSignIn("google")}
+      >
         <Image
           src="/icons/google.svg"
           alt="google logo"

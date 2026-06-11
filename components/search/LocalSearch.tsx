@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/url";
 
-interface LocalSearchProps {
+interface Props {
   route: string;
   imgSrc: string;
   placeholder: string;
+  iconPosition?: "left" | "right";
   otherClasses?: string;
 }
 
@@ -18,22 +19,28 @@ const LocalSearch = ({
   route,
   imgSrc,
   placeholder,
+  iconPosition = "left",
   otherClasses,
-}: LocalSearchProps) => {
-  const pathname = usePathname();
+}: Props) => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
+  const query = searchParams.get("query");
 
-  const [searchQuery, setSearchQuery] = useState(query);
+  const [search, setSearch] = useState(query || "");
+  const previousSearchRef = useRef(search);
 
   useEffect(() => {
+    if (previousSearchRef.current === search) return;
+
+    previousSearchRef.current = search;
+
     const delayDebounceFn = setTimeout(() => {
-      if (searchQuery) {
+      if (search) {
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
           key: "query",
-          value: searchQuery,
+          value: search,
         });
 
         router.push(newUrl, { scroll: false });
@@ -48,29 +55,41 @@ const LocalSearch = ({
         }
       }
     }, 300);
+
     return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, router, route, searchParams, pathname]);
+  }, [search, route, pathname, router, searchParams]);
 
   return (
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
-      <Image
-        src={imgSrc}
-        width={24}
-        height={24}
-        alt="Search"
-        className="cursor-pointer"
-      />
+      {iconPosition === "left" && (
+        <Image
+          src={imgSrc}
+          width={24}
+          height={24}
+          alt="Search"
+          className="cursor-pointer"
+        />
+      )}
       <Input
         type="text"
         placeholder={placeholder}
-        value={searchQuery}
+        value={search}
         onChange={(e) => {
-          setSearchQuery(e.target.value);
+          setSearch(e.target.value);
         }}
         className="paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none"
       />
+      {iconPosition === "right" && (
+        <Image
+          src={imgSrc}
+          width={24}
+          height={24}
+          alt="Search"
+          className="cursor-pointer"
+        />
+      )}
     </div>
   );
 };

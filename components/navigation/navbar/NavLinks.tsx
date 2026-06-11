@@ -3,31 +3,39 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import React from "react";
 
 import { SheetClose } from "@/components/ui/sheet";
 import NAV_LINKS from "@/constants/NavLinks";
 import { cn } from "@/lib/utils";
 
-const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
+const NavLinks = ({
+  isMobileNav = false,
+  userId,
+}: {
+  isMobileNav?: boolean;
+  userId?: string;
+}) => {
   const pathname = usePathname();
-  const userId = 1;
+  const { data: session } = useSession();
+
   return (
     <>
       {NAV_LINKS.map((item) => {
+        const route =
+          item.route === "/profile" && userId ? `/profile/${userId}` : item.route;
         const isActive =
-          (pathname.includes(item.route) && item.route.length > 1) ||
-          pathname === item.route;
+          (pathname.includes(route) && route.length > 1) || pathname === route;
 
         if (item.route === "/profile") {
-          if (userId) item.route = `/profile/${userId}`;
-          else return null;
+          if (!session?.user || !userId) return null;
         }
 
         return isMobileNav ? (
-          <SheetClose asChild key={item.route}>
+          <SheetClose asChild key={route}>
             <Link
-              href={item.route}
+              href={route}
               key={item.label}
               className={cn(
                 isActive
@@ -54,9 +62,9 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
             </Link>
           </SheetClose>
         ) : (
-          <React.Fragment key={item.route}>
+          <React.Fragment key={route}>
             <Link
-              href={item.route}
+              href={route}
               key={item.label}
               className={cn(
                 isActive

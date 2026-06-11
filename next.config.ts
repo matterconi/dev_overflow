@@ -9,6 +9,21 @@ const nextConfig: NextConfig = {
         hostname: "randomuser.me",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: ""
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: ""
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        port: "",
+      },
     ],
   },
 };

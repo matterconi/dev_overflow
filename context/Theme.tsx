@@ -1,13 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { ThemeProviderProps } from "next-themes"; // Correct import
+import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
 import * as React from "react";
-
-const NextThemesProvider = dynamic(
-  () => import("next-themes").then((mod) => mod.ThemeProvider),
-  { ssr: false } // Disable SSR for theme provider
-);
 
 export default function ThemeProvider({
   children,

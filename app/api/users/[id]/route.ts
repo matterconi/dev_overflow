@@ -5,7 +5,7 @@ import handleError from "@/lib/handlers/error";
 import { NotFoundError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
-import { APIErrorResponse } from "@/types/global";
+import type { APIErrorResponse } from "@/types/action";
 
 export async function GET(
   _: Request,
@@ -62,7 +62,9 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
     const validatedData = UserSchema.partial().parse(body);
-    const user = await User.findByIdAndUpdate(id, validatedData, { new: true });
+    const user = await User.findByIdAndUpdate(id, validatedData, {
+      returnDocument: "after",
+    });
     if (!user) {
       throw new NotFoundError("User not found");
     }

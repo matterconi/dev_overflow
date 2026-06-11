@@ -1,7 +1,10 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { DefaultValues, FieldValues, Path, useForm } from "react-hook-form";
+import { DefaultValues, FieldValues, Path, Resolver, useForm } from "react-hook-form";
 import { ZodObject } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,11 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
+import type { ActionResponse } from "@/types/action";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodObject<any>; // Fix the schema type
   defaultValues: DefaultValues<T>;
-  onSubmitAction: (data: T) => Promise<{ success: boolean; data: T } | null>;
+  onSubmit: (data: T) => Promise<ActionResponse>;
   formType: "SIGN_IN" | "SIGN_UP";
 }
 
@@ -27,19 +32,43 @@ export default function AuthForm<T extends FieldValues>({
   schema,
   defaultValues,
   formType,
-  onSubmitAction,
+  onSubmit,
 }: AuthFormProps<T>) {
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<T>,
     defaultValues,
   });
+
+  const router = useRouter();
+
+  const handleSubmit = async (data: T) => {
+    const result = (await onSubmit(data)) as ActionResponse;
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description:
+          formType === "SIGN_IN"
+            ? "Signed in successfully"
+            : "Signed up successfully",
+      });
+
+      router.push(ROUTES.HOME);
+    } else {
+      toast({
+        title: "Error",
+        description: result.error?.message || "Something went wrong",
+        variant: "destructive",
+      });
+    }
+  };
 
   const buttonText = formType === "SIGN_IN" ? "Sign In" : "Sign Up";
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmitAction)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-6 mt-10"
       >
         {(Object.keys(defaultValues) as Path<T>[]).map((fieldName) => (

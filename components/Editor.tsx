@@ -6,7 +6,7 @@ import React from "react";
 const EditorJSONPreview = () => {
   const { editor } = useCurrentEditor();
 
-  return <pre>{JSON.stringify(editor.getJSON(), null, 2)}</pre>;
+  return <pre>{JSON.stringify(editor?.getJSON(), null, 2)}</pre>;
 };
 
 export default EditorJSONPreview;

@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,27 +15,45 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import ROUTES from "@/constants/routes";
 import Tiptap from "@/context/Tiptap";
+import { toast } from "@/hooks/use-toast";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
+import { Question } from "@/types/global";
 
 import TagCard from "../cards/TagCard";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-const QuestionForm = () => {
+const QuestionForm = ({
+  question,
+  isEdit,
+}: {
+  question?: Question;
+  isEdit?: boolean;
+}) => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      tags: [],
+      title: question?.title || "",
+      content: question?.content || "",
+      tags:
+        question?.tags
+          .map((tag) => tag.name.trim().toLowerCase())
+          .filter(Boolean) || [],
     },
   });
 
+  const normalizeTag = (value: string) => value.trim().toLowerCase();
+
   const handleTagRemove = (tag: string, field: { value: string[] }) => {
+    const tagToRemove = normalizeTag(tag);
     form.setValue(
       "tags",
-      field.value.filter((t: string) => t !== tag)
+      field.value.filter((t: string) => normalizeTag(t) !== tagToRemove)
     );
 
     console.log(field.value.length);
@@ -54,12 +73,14 @@ const QuestionForm = () => {
     console.log(e.currentTarget.value);
     if (e.key === "Enter") {
       e.preventDefault();
-      const tagInput = e.currentTarget.value.trim();
+      const tagInputRaw = e.currentTarget.value;
+      const tagInput = normalizeTag(tagInputRaw);
+      const existingNormalized = field.value.map(normalizeTag);
       if (
         tagInput &&
         tagInput.length < 15 &&
         field.value.length < 5 &&
-        !field.value.includes(tagInput)
+        !existingNormalized.includes(tagInput)
       ) {
         form.setValue("tags", [...field.value, tagInput]);
         e.currentTarget.value = "";
@@ -74,7 +95,7 @@ const QuestionForm = () => {
           type: "maxLength",
           message: "You can only add up to 5 tags",
         });
-      } else if (field.value.includes(tagInput)) {
+      } else if (existingNormalized.includes(tagInput)) {
         form.setError("tags", {
           type: "duplicate",
           message: "Tag already exists",
@@ -83,8 +104,83 @@ const QuestionForm = () => {
     }
   };
 
-  const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
-    console.log(data);
+  const handleCreateQuestion = async (
+    data: z.infer<typeof AskQuestionSchema>
+  ) => {
+    startTransition(async () => {
+      try {
+        if (isEdit && question) {
+          const result = await editQuestion({
+            questionId: question._id,
+            title: data.title,
+            content: data.content,
+            tags: data.tags,
+          });
+
+          if (result.success) {
+            toast({
+              title: "Success",
+              description: "Question updated successfully",
+            });
+            console.log("Question updated successfully");
+          }
+
+          if (result.data) {
+            const destination = ROUTES.QUESTIONS(String(result.data?._id));
+            console.log("Navigating to:", destination);
+            router.push(destination);
+          } else {
+            console.error("Question update failed:", {
+              status: result.status,
+              error: result.error,
+            });
+            toast({
+              title: `Error ${result.status}`,
+              description: result.error?.message || "something went wrong",
+              variant: "destructive",
+            });
+          }
+
+          return;
+        }
+        const result = await createQuestion(data);
+        console.log("createQuestion result:", result);
+
+        if (result.success) {
+          toast({
+            title: "Success",
+            description: "Question created successfully",
+          });
+          console.log("Question created successfully");
+        }
+
+        if (result.data) {
+          const destination = ROUTES.QUESTIONS(String(result.data?._id));
+          console.log("Navigating to:", destination);
+          router.push(destination);
+        } else {
+          console.error("Question creation failed:", {
+            status: result.status,
+            error: result.error,
+          });
+          toast({
+            title: `Error ${result.status}`,
+            description: result.error?.message || "something went wrong",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("[QuestionForm] Unexpected error during submit:", error);
+        toast({
+          title: "Unexpected Error",
+          description:
+            "An unexpected error occurred while creating the question",
+          variant: "destructive",
+        });
+      } finally {
+        console.groupEnd();
+      }
+    });
   };
   return (
     <Form {...form}>
@@ -124,8 +220,11 @@ const QuestionForm = () => {
                 <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl>
-                {/* Pass value and onChange to EditorWithTheme */}
-                <Tiptap value={field.value} onChange={field.onChange} />
+                <Tiptap
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Describe your problem in detail, including what you expected, what happened, and any code you've tried..."
+                />
               </FormControl>
               <FormDescription className="body-regular text-light-500 mt-2.5">
                 Introduce the problem and expand what is in the title
@@ -177,14 +276,16 @@ const QuestionForm = () => {
 
         <div className="mt-16 flex justify-end">
           <Button
-            disabled={form.formState.isSubmitting}
+            disabled={isPending}
             type="submit"
             className="primary-gradient !text-light-900 w-fit"
             onClick={form.handleSubmit(handleCreateQuestion)}
           >
-            {form.formState.isSubmitting
-              ? "Creating Question..."
-              : "Create Question"}
+            {isPending
+              ? "Submitting..."
+              : isEdit
+                ? "Update Question"
+                : "Ask Question"}
           </Button>
         </div>
       </form>

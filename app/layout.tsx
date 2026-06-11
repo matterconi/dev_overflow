@@ -9,6 +9,14 @@ import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from "@/context/Theme";
+import {
+  sharedAuthors,
+  sharedIcons,
+  sharedKeywords,
+  sharedOGImage,
+  sharedRobots,
+  siteConfig,
+} from "@/constants/metadata";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,11 +31,46 @@ const spaceGrotesk = SpaceGrotesk({
 });
 
 export const metadata: Metadata = {
-  title: "DevFlow",
-  description:
-    "A community driven platform for asking and answering programming questions. Get help, share knowledge and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structure and more.",
-  icons: {
-    icon: "/images/site-logo.svg",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+
+  generator: "Next.js",
+  applicationName: siteConfig.name,
+  referrer: "origin-when-cross-origin",
+  keywords: sharedKeywords,
+  authors: sharedAuthors,
+  creator: siteConfig.creator,
+  publisher: siteConfig.name,
+
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+
+  robots: sharedRobots,
+  icons: sharedIcons,
+
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: siteConfig.name,
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [sharedOGImage],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [sharedOGImage.url],
+    creator: siteConfig.twitterHandle,
   },
 };
 
@@ -43,10 +86,11 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
-      <SessionProvider session={session}>
-        <body
-          className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
-        >
+      <body
+        className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -56,8 +100,8 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
             {children}
           </ThemeProvider>
           <Toaster />
-        </body>
-      </SessionProvider>
+        </SessionProvider>
+      </body>
     </html>
   );
 };

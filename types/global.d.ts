@@ -1,5 +1,3 @@
-import { NextResponse } from "next/server";
-
 interface Tag {
   _id: string;
   name: string;
@@ -11,30 +9,70 @@ interface Author {
   imgUrl: string;
 }
 
-interface Question {
+export interface User {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  bio?: string;
+  image?: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
+}
+
+export interface Question {
   _id: string;
   title: string;
-  description: string;
+  content: string;
   tags: Tag[];
   author: Author;
   createdAt: Date;
   upvotes: number;
+  downvotes: number;
   answers: number;
   views: number;
 }
 
-type ActionResponse<T = null> = {
-  success: boolean;
-  data?: T;
-  error?: {
-    message: string;
-    details?: Record<string, string[]>;
-  };
-  status?: number;
-};
+export interface Collection {
+  _id: string;
+  author: Author;
+  question: Question;
+}
 
-type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
-type ErrorResponse = ActionResponse<undefined> & { success: false };
+export interface Answer {
+  _id: string;
+  content: string;
+  author: Author;
+  createdAt: Date;
+  upvotes: number;
+  downvotes: number;
+  question: string;
+}
 
-type APIErrorResponse = NextResponse<ErrorResponse>;
-type APIResponse<T = null> = NextResponse<SuccessResponse<T>> | ErrorResponse;
+export interface BadgeCount {
+  GOLD: number;
+  SILVER: number;
+  BRONZE: number;
+}
+
+type Badges = BadgeCount;
+
+export interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
+
+export type {
+  ActionResponse,
+  APIErrorResponse,
+  APIResponse,
+  AuthCredentials,
+  CreateQuestionParams,
+  EditQuestionParams,
+  ErrorResponse,
+  getQuestionParams,
+  PaginatedSearchParams,
+  SignInWithAuthParams,
+  SuccessResponse,
+} from "./action";
